@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Rang Punjabi - Court Piece Card Game</title>
   
   <link rel="manifest" href="/manifest.json">
@@ -26,21 +26,21 @@
       <div class="brand" id="brand-home-btn" title="Main Menu">
         <span class="brand-logo">🎴</span>
         <div>
-          <span class="brand-text">RANG PUNJABI</span>
-          <span class="brand-sub">ਰੰਗ ਤਾਸ਼</span>
+          <span class="brand-text">RANG</span>
+          <span class="brand-sub">ਰੰਗ</span>
         </div>
       </div>
 
       <!-- Center Score & Trump Widget -->
       <div class="top-center-stats">
         <div class="score-capsule" id="top-score-display">
-          <span class="team-badge team-you">You: 0 (0 pts)</span>
-          <span class="score-vs">vs</span>
-          <span class="team-badge team-opp">Opp: 0 (0 pts)</span>
+          <span class="team-badge team-you">You: 0</span>
+          <span class="score-vs">:</span>
+          <span class="team-badge team-opp">Opp: 0</span>
         </div>
 
         <div class="trump-widget" id="top-trump-widget" title="Current Trump (ਰੰਗ)">
-          <span>🃏</span> <span>Trump: None</span>
+          <span>🃏</span> <span>None</span>
         </div>
       </div>
 
@@ -60,113 +60,99 @@
       <div class="table-corner bottom-right"></div>
       <div class="felt-watermark">RANG</div>
 
-      <div class="table-layout">
+      <!-- 1. Top: Partner (North) -->
+      <div class="player-zone north">
+        <div class="player-card" id="player-card-north">
+          <div class="player-avatar-wrap">
+            <div class="player-avatar">🧕</div>
+            <span class="player-badge-role">PARTNER</span>
+          </div>
+          <div class="player-info-meta">
+            <span class="player-name">Jassi</span>
+            <span class="tricks-pill">0 sar</span>
+          </div>
+        </div>
+        <div class="opponent-mini-hand horizontal" id="north-hand-cards"></div>
+      </div>
+
+      <!-- 2. Left: Opponent 1 (West) -->
+      <div class="player-zone west">
+        <div class="player-card" id="player-card-west">
+          <div class="player-avatar-wrap">
+            <div class="player-avatar">👳</div>
+          </div>
+          <div class="player-info-meta">
+            <span class="player-name">Gopi</span>
+            <span class="tricks-pill">0</span>
+          </div>
+        </div>
+        <div class="opponent-mini-hand vertical" id="west-hand-cards"></div>
+      </div>
+
+      <!-- 3. Center: Trick Arena -->
+      <div class="center-table-zone">
+        <div class="trick-arena" id="trick-arena">
+          <!-- Cards played in current trick -->
+        </div>
+      </div>
+
+      <!-- 4. Right: Opponent 2 (East) -->
+      <div class="player-zone east">
+        <div class="player-card" id="player-card-east">
+          <div class="player-avatar-wrap">
+            <div class="player-avatar">🧔‍♂️</div>
+          </div>
+          <div class="player-info-meta">
+            <span class="player-name">Happy</span>
+            <span class="tricks-pill">0</span>
+          </div>
+        </div>
+        <div class="opponent-mini-hand vertical" id="east-hand-cards"></div>
+      </div>
+
+      <!-- 5. Bottom: You & Hand Cards (South) -->
+      <div class="player-zone south">
         
-        <!-- North: Partner (Team 1) -->
-        <div class="player-zone north">
-          <div class="player-card" id="player-card-north">
-            <div class="player-avatar-wrap">
-              <div class="player-avatar">🧕</div>
-              <span class="player-badge-role">PARTNER</span>
-            </div>
-            <div class="player-info-meta">
-              <div class="player-name-row">
-                <span class="player-name">Jassi (Partner)</span>
-              </div>
-              <div class="tricks-pill">Tricks: 0</div>
-            </div>
-          </div>
-          <div class="opponent-mini-hand horizontal" id="north-hand-cards"></div>
-        </div>
+        <div class="table-action-dock">
+          <button class="pill-btn" id="btn-sort-cards" title="Sort Hand Cards">
+            <span>🔄</span> <span>Sort</span>
+          </button>
 
-        <!-- West: Opponent 1 (Team 2) -->
-        <div class="player-zone west">
-          <div class="player-card" id="player-card-west">
-            <div class="player-avatar-wrap">
-              <div class="player-avatar">👳</div>
-            </div>
-            <div class="player-info-meta">
-              <div class="player-name-row">
-                <span class="player-name">Gopi</span>
-              </div>
-              <div class="tricks-pill">Tricks: 0</div>
-            </div>
-          </div>
-          <div class="opponent-mini-hand vertical" id="west-hand-cards"></div>
-        </div>
-
-        <!-- Center: Trick Arena -->
-        <div class="center-table-zone">
-          <div class="trick-arena" id="trick-arena">
-            <!-- Cards played will appear here dynamically -->
-          </div>
-        </div>
-
-        <!-- East: Opponent 2 (Team 2) -->
-        <div class="player-zone east">
-          <div class="player-card" id="player-card-east">
-            <div class="player-avatar-wrap">
-              <div class="player-avatar">🧔‍♂️</div>
-            </div>
-            <div class="player-info-meta">
-              <div class="player-name-row">
-                <span class="player-name">Happy</span>
-              </div>
-              <div class="tricks-pill">Tricks: 0</div>
-            </div>
-          </div>
-          <div class="opponent-mini-hand vertical" id="east-hand-cards"></div>
-        </div>
-
-        <!-- South: Human Player (Team 1) -->
-        <div class="player-zone south">
           <div class="player-card" id="player-card-south">
             <div class="player-avatar-wrap">
               <div class="player-avatar">👳‍♂️</div>
               <span class="player-badge-role">YOU</span>
             </div>
             <div class="player-info-meta">
-              <div class="player-name-row">
-                <span class="player-name">You</span>
-              </div>
-              <div class="tricks-pill">Tricks: 0</div>
+              <span class="player-name">You</span>
+              <span class="tricks-pill">0 sar</span>
             </div>
           </div>
 
-          <!-- Bottom Card Fan -->
-          <div class="player-hand-container">
-            <div class="hand-fan" id="player-hand-fan">
-              <!-- Rendered Player Hand Cards -->
-            </div>
+          <button class="pill-btn" id="action-chat-btn" title="Chat & Desi Reactions">
+            <span>💬</span> <span>Reactions</span>
+          </button>
+        </div>
+
+        <!-- Dynamic Hand Fan -->
+        <div class="player-hand-container">
+          <div class="hand-fan" id="player-hand-fan">
+            <!-- Player's Cards -->
           </div>
         </div>
 
       </div>
 
-      <!-- Left Bottom Bar: Sort Actions -->
-      <div class="table-left-bar">
-        <button class="pill-btn" id="btn-sort-cards" title="Sort Hand Cards">
-          <span>🔄</span> <span>Sort Cards</span>
-        </button>
-      </div>
-
-      <!-- Right Bottom Bar: Chat & Reactions -->
-      <div class="table-bottom-bar">
-        <button class="pill-btn" id="action-chat-btn" title="Chat & Desi Reactions">
-          <span>💬</span> <span>Reactions</span>
-        </button>
-      </div>
-
-      <!-- Quick Reactions Popover Tray -->
+      <!-- Reactions Popover Tray -->
       <div class="reactions-tray" id="reactions-tray-popover">
-        <div style="font-size:0.78rem; font-weight:700; color:var(--gold-light); margin-bottom:4px;">
+        <div style="font-size:0.75rem; font-weight:700; color:var(--gold-light); margin-bottom:2px;">
           Punjabi Slogans & Reactions
         </div>
         <div class="reaction-slogans-grid" id="reaction-slogans-grid">
-          <!-- Filled dynamically -->
+          <!-- Dynamic Buttons -->
         </div>
         <div class="custom-chat-row">
-          <input type="text" class="chat-input" id="custom-chat-input" placeholder="Type a message..." maxlength="60">
+          <input type="text" class="chat-input" id="custom-chat-input" placeholder="Message..." maxlength="50">
           <button class="chat-send-btn" id="custom-chat-send-btn">Send</button>
         </div>
       </div>
@@ -204,26 +190,26 @@
             <div class="option-card game-mode-opt selected" data-mode="single_sar">
               <div class="option-icon">👑</div>
               <div class="option-title">Single Sar</div>
-              <div class="option-desc">Classic Rang. Claim tricks immediately. 7-0 is Kote!</div>
+              <div class="option-desc">Classic Rang. 7-0 is Kote!</div>
             </div>
             <div class="option-card game-mode-opt" data-mode="double_sar">
               <div class="option-icon">📚</div>
               <div class="option-title">Double Sar</div>
-              <div class="option-desc">Accumulate heap until winning 2 tricks in a row!</div>
+              <div class="option-desc">Collect on 2-in-a-row!</div>
             </div>
             <div class="option-card game-mode-opt" data-mode="hidden_rung">
               <div class="option-icon">🔒</div>
               <div class="option-title">Hidden Rung</div>
-              <div class="option-desc">Band Rang! Trump card secret until someone revokes.</div>
+              <div class="option-desc">Band Rang!</div>
             </div>
           </div>
         </div>
 
-        <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+        <div style="display:flex; flex-direction:column; gap:8px; margin-top:14px;">
           <button class="primary-btn" id="btn-play-solo">
             <span>🤖</span> <span>Play Solo vs Bots</span>
           </button>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
             <button class="secondary-btn" id="btn-create-room">
               <span>🌐</span> <span>Create Room</span>
             </button>
@@ -245,9 +231,9 @@
           <button class="modal-close" id="btn-close-lobby">&times;</button>
         </div>
 
-        <div style="text-align:center; margin-bottom:16px;">
-          <span style="font-size:0.85rem; color:var(--text-muted);">Share this room code with friends:</span>
-          <div style="font-size:1.8rem; font-weight:900; letter-spacing:4px; color:var(--gold-light); margin:6px 0;" id="lobby-room-code-badge">
+        <div style="text-align:center; margin-bottom:12px;">
+          <span style="font-size:0.8rem; color:var(--text-muted);">Share room code with friends:</span>
+          <div style="font-size:1.6rem; font-weight:900; letter-spacing:4px; color:var(--gold-light); margin:4px 0;" id="lobby-room-code-badge">
             ----
           </div>
           <button class="pill-btn" id="btn-copy-invite-link" style="margin:0 auto;">
@@ -255,20 +241,20 @@
           </button>
         </div>
 
-        <div style="font-size:0.82rem; font-weight:700; color:var(--gold-light); margin-bottom:6px;">
-          Players & Partnerships (2 vs 2):
+        <div style="font-size:0.78rem; font-weight:700; color:var(--gold-light); margin-bottom:4px;">
+          Players (2 vs 2):
         </div>
         <div class="lobby-seats-grid" id="lobby-seats-container"></div>
 
-        <button class="primary-btn" id="btn-start-online-game" style="margin-top:16px;">
-          <span>🚀</span> <span>Start Game (Fill with Bots)</span>
+        <button class="primary-btn" id="btn-start-online-game" style="margin-top:12px;">
+          <span>🚀</span> <span>Start Game (Fill Bots)</span>
         </button>
       </div>
     </div>
 
     <!-- MODAL 3: JOIN ROOM INPUT -->
     <div class="modal-overlay" id="join-room-modal">
-      <div class="modal-card" style="max-width:380px;">
+      <div class="modal-card" style="max-width:340px;">
         <div class="modal-header">
           <div class="modal-title">
             <span>🔑</span> <span>Join Room</span>
@@ -277,8 +263,8 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Enter 4-Letter Room Code</label>
-          <input type="text" class="form-input" id="join-room-code-input" placeholder="e.g. 7K9X" maxlength="6" style="text-transform:uppercase; font-size:1.4rem; letter-spacing:4px; text-align:center;">
+          <label class="form-label">Enter 4-Letter Code</label>
+          <input type="text" class="form-input" id="join-room-code-input" placeholder="e.g. 7K9X" maxlength="6" style="text-transform:uppercase; font-size:1.3rem; letter-spacing:4px; text-align:center;">
         </div>
 
         <button class="primary-btn" id="btn-confirm-join">
@@ -300,10 +286,10 @@
           💡 Calculating best suit...
         </div>
 
-        <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px;">
+        <div style="font-size:0.75rem; color:var(--text-muted); margin-bottom:6px;">
           Your First 5 Dealt Cards:
         </div>
-        <div id="trump-hand-preview" style="display:flex; justify-content:center; gap:6px; margin-bottom:16px; overflow-x:auto; padding:4px 0;"></div>
+        <div id="trump-hand-preview" style="display:flex; justify-content:center; gap:4px; margin-bottom:12px; overflow-x:auto; padding:2px 0;"></div>
 
         <div class="trump-cards-grid" id="trump-suits-container"></div>
       </div>
@@ -311,46 +297,36 @@
 
     <!-- MODAL 5: RULES GUIDE -->
     <div class="modal-overlay" id="rules-modal">
-      <div class="modal-card" style="max-width:600px;">
+      <div class="modal-card" style="max-width:540px;">
         <div class="modal-header">
           <div class="modal-title">
-            <span>📖</span> <span>Rang Rules & Strategy (ਰੰਗ ਦੇ ਨਿਯਮ)</span>
+            <span>📖</span> <span>Rang Rules & Strategy (ਨਿਯਮ)</span>
           </div>
           <button class="modal-close">&times;</button>
         </div>
 
-        <div style="font-size:0.88rem; line-height:1.6; color:#e2e8f0; display:flex; flex-direction:column; gap:12px;">
+        <div style="font-size:0.82rem; line-height:1.5; color:#e2e8f0; display:flex; flex-direction:column; gap:10px;">
           <div>
-            <h4 style="color:var(--gold-light); font-size:1rem;">🎴 Overview & Partnerships</h4>
-            <p>Rang (also known as Court Piece or Coat Pees) is a classic 4-player trick-taking game played in fixed partnerships: <strong>South & North (You & Partner)</strong> vs <strong>West & East (Opponents)</strong>.</p>
+            <h4 style="color:var(--gold-light); font-size:0.92rem;">🎴 Partnerships</h4>
+            <p>4 players in 2 fixed teams: <strong>You & Partner (South & North)</strong> vs <strong>Opponents (West & East)</strong>.</p>
           </div>
 
           <div>
-            <h4 style="color:var(--gold-light); font-size:1rem;">🎺 The Deal & Calling Trump (ਰੰਗ)</h4>
-            <p>1. Each player is dealt <strong>5 cards</strong> in the first round.</p>
-            <p>2. The <strong>Trump Caller (Hukmi / Peera)</strong> inspects their 5 cards and selects the Trump Suit (♠️ Spades, ♥️ Hearts, ♦️ Diamonds, or ♣️ Clubs).</p>
-            <p>3. The remaining <strong>8 cards</strong> are dealt (total 13 cards per player).</p>
+            <h4 style="color:var(--gold-light); font-size:0.92rem;">🎺 Calling Trump (ਰੰਗ)</h4>
+            <p>Each player is dealt 5 cards first. The Trump Caller inspects them and selects Trump (♠️ Spades, ♥️ Hearts, ♦️ Diamonds, ♣️ Clubs). Then remaining 8 cards are dealt (13 cards total).</p>
           </div>
 
           <div>
-            <h4 style="color:var(--gold-light); font-size:1rem;">⚔️ Trick Play & Cutting (ਕੱਟਣਾ)</h4>
-            <p>• The Trump Caller leads the first trick. Turn moves clockwise.</p>
-            <p>• <strong>Must Follow Suit:</strong> You must play a card of the led suit if you have one.</p>
-            <p>• <strong>Trump Cut (Katto):</strong> If you have NO cards of the led suit, you can play a Trump card to win the trick!</p>
-            <p>• Highest Trump wins; if no trump played, highest card of led suit wins (A > K > Q > J > 10... > 2).</p>
+            <h4 style="color:var(--gold-light); font-size:0.92rem;">⚔️ Cutting (ਕੱਟਣਾ)</h4>
+            <p>• Must follow suit if you have cards of that suit.</p>
+            <p>• If out of led suit, play a Trump card to cut and win the trick!</p>
           </div>
 
           <div>
-            <h4 style="color:var(--gold-light); font-size:1rem;">🔥 Game Variations</h4>
-            <p>• <strong>Single Sar (Classic):</strong> Tricks are collected immediately. First team to 7 tricks wins the hand.</p>
-            <p>• <strong>Double Sar:</strong> Won tricks accumulate in the center heap until one player wins <strong>2 consecutive tricks</strong> in a row to sweep the whole stash!</p>
-            <p>• <strong>Hidden Rung (Band Rang):</strong> Trump card is placed face-down. Secret until a player revokes and opens the trump card!</p>
-          </div>
-
-          <div>
-            <h4 style="color:var(--gold-light); font-size:1rem;">👑 Kote & Bawla Kote Scoring</h4>
-            <p>• <strong>Kote (7-0):</strong> Winning the first 7 tricks straight without letting opponents win any trick (2 Match Points)!</p>
-            <p>• <strong>Bawla Kote (13-0):</strong> Clean sweep of all 13 tricks in a hand (3 Match Points)!</p>
+            <h4 style="color:var(--gold-light); font-size:0.92rem;">🔥 Modes & Kote (ਕੋਟ)</h4>
+            <p>• <strong>Single Sar:</strong> First to 7 tricks wins hand. Winning first 7 straight (7-0) is a <strong>Kote</strong>! 13-0 is a <strong>Bawla Kote</strong>.</p>
+            <p>• <strong>Double Sar:</strong> Win 2 tricks in a row to take all cards from center heap!</p>
+            <p>• <strong>Hidden Rung:</strong> Trump card is hidden face-down until someone revokes/cuts.</p>
           </div>
         </div>
       </div>
@@ -358,7 +334,7 @@
 
     <!-- MODAL 6: SETTINGS -->
     <div class="modal-overlay" id="settings-modal">
-      <div class="modal-card" style="max-width:440px;">
+      <div class="modal-card" style="max-width:400px;">
         <div class="modal-header">
           <div class="modal-title">
             <span>⚙️</span> <span>Game Settings</span>
@@ -367,12 +343,12 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Table Felt Theme (ਥੀਮ)</label>
+          <label class="form-label">Table Felt Theme</label>
           <select class="form-input" id="setting-table-theme">
-            <option value="theme-emerald">Royal Emerald Green (ਰਵਾਇਤੀ)</option>
-            <option value="theme-maharaja">Maharaja Velvet Red (ਮਹਾਰਾਜਾ ਲਾਲ)</option>
-            <option value="theme-dhaba">Punjab Dhaba Ochre (ਪੰਜਾਬੀ ਢਾਬਾ)</option>
-            <option value="theme-midnight">Midnight Sapphire Blue (ਨੀਲਾ)</option>
+            <option value="theme-emerald">Royal Emerald Green</option>
+            <option value="theme-maharaja">Maharaja Velvet Red</option>
+            <option value="theme-dhaba">Punjab Dhaba Ochre</option>
+            <option value="theme-midnight">Midnight Sapphire Blue</option>
           </select>
         </div>
 
@@ -385,7 +361,7 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label">Bot Difficulty (ਬੋਟ ਦਾ ਪੱਧਰ)</label>
+          <label class="form-label">Bot Difficulty</label>
           <select class="form-input" id="setting-bot-diff">
             <option value="easy">Shaukeen (Easy)</option>
             <option value="medium" selected>Chalaak (Medium)</option>
@@ -401,23 +377,15 @@
             <option value="1600">Relaxed (1.6s)</option>
           </select>
         </div>
-
-        <div class="form-group">
-          <label class="form-label">Multiplayer Server URL (Optional for Netlify)</label>
-          <input type="text" class="form-input" id="setting-server-url" placeholder="Leave empty for local, or https://your-server.onrender.com">
-          <span style="font-size:0.72rem; color:var(--text-muted); display:block; margin-top:4px;">
-            If hosting static site on Netlify, enter your free Render/Railway backend URL here.
-          </span>
-        </div>
       </div>
     </div>
 
-    <!-- MODAL 7: MATCH OVER / VICTORY -->
+    <!-- MODAL 7: MATCH OVER -->
     <div class="modal-overlay" id="match-over-modal">
       <div class="modal-card" style="text-align:center;">
-        <div style="font-size:48px; margin-bottom:8px;">🏆</div>
-        <h2 id="match-winner-title" style="color:var(--gold-light); margin-bottom:12px;">Victory!</h2>
-        <div id="match-stats-content" style="margin-bottom:20px;"></div>
+        <div style="font-size:42px; margin-bottom:6px;">🏆</div>
+        <h2 id="match-winner-title" style="color:var(--gold-light); margin-bottom:8px;">Victory!</h2>
+        <div id="match-stats-content" style="margin-bottom:16px;"></div>
         <button class="primary-btn" id="match-rematch-btn">
           <span>🔄</span> <span>Play Again</span>
         </button>
