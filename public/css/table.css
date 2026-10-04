@@ -1,0 +1,593 @@
+/* Main Game Table */
+.game-table-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--felt-bg);
+  box-shadow: inset 0 0 100px rgba(0, 0, 0, 0.85);
+  border: 10px solid #3d2314;
+  border-image: linear-gradient(to bottom right, #5c381e, #2a160c, #4a2b16) 1;
+  overflow: hidden;
+}
+
+/* Brass Table Corner Accents */
+.table-corner {
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  border: 3px solid #d4af37;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0.6;
+}
+
+.table-corner.top-left { top: 0; left: 0; border-right: none; border-bottom: none; }
+.table-corner.top-right { top: 0; right: 0; border-left: none; border-bottom: none; }
+.table-corner.bottom-left { bottom: 0; left: 0; border-right: none; border-top: none; }
+.table-corner.bottom-right { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* Table Felt Watermark */
+.felt-watermark {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13vw;
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.025);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 10px;
+  text-transform: uppercase;
+}
+
+/* 4-Player Table Grid Layout */
+.table-layout {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(70px, auto) 1fr minmax(70px, auto);
+  height: 100%;
+  width: 100%;
+  position: relative;
+  padding: 6px 10px;
+}
+
+/* Player Zones */
+.player-zone {
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 20;
+}
+
+/* North (Partner) */
+.player-zone.north {
+  grid-column: 2;
+  grid-row: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 2px;
+}
+
+/* South (You) */
+.player-zone.south {
+  grid-column: 2;
+  grid-row: 3;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 4px;
+  width: 100%;
+}
+
+/* West (Opponent 1) */
+.player-zone.west {
+  grid-column: 1;
+  grid-row: 2;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 2px;
+}
+
+/* East (Opponent 2) */
+.player-zone.east {
+  grid-column: 3;
+  grid-row: 2;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: flex-start;
+  padding-right: 2px;
+}
+
+/* Player Info Profile Card */
+.player-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  background: rgba(10, 25, 15, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  backdrop-filter: blur(6px);
+  padding: 5px 8px;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s ease;
+  min-width: 80px;
+}
+
+.player-zone.south .player-card {
+  flex-direction: row;
+  gap: 8px;
+  padding: 3px 10px;
+  margin-bottom: 4px;
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.player-avatar-wrap {
+  position: relative;
+}
+
+.player-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-primary);
+  background: #1b3826;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Active Turn Glowing Pulse */
+.player-card.active-turn .player-avatar {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.4), 0 0 16px rgba(34, 197, 94, 0.8);
+  transform: scale(1.08);
+  animation: turnPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes turnPulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.4), 0 0 12px rgba(34, 197, 94, 0.7); }
+  50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.6), 0 0 20px rgba(34, 197, 94, 0.9); }
+}
+
+.player-badge-role {
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #d4af37, #996515);
+  color: #0b1d12;
+  font-size: 0.58rem;
+  font-weight: 800;
+  padding: 1px 5px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+}
+
+.player-badge-role.dealer {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.player-name-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.player-name {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  max-width: 75px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tricks-pill {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--gold-light);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 1px 5px;
+  border-radius: 6px;
+  border: 1px solid rgba(212, 175, 55, 0.25);
+  margin-top: 1px;
+}
+
+/* Speech & Reaction Bubbles */
+.speech-bubble {
+  position: absolute;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--gold-primary);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 60;
+  animation: bubblePop 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+
+.player-zone.south .speech-bubble { bottom: 100%; margin-bottom: 6px; }
+.player-zone.north .speech-bubble { top: 100%; margin-top: 6px; }
+.player-zone.west .speech-bubble { left: 100%; margin-left: 8px; }
+.player-zone.east .speech-bubble { right: 100%; margin-right: 8px; }
+
+@keyframes bubblePop {
+  0% { transform: scale(0.6) translateY(10px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+/* Center Trick Table Area */
+.center-table-zone {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.trick-arena {
+  width: 250px;
+  height: 200px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed rgba(212, 175, 55, 0.25);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(20, 60, 35, 0.45) 0%, transparent 75%);
+}
+
+@media (max-width: 640px) {
+  .trick-arena {
+    width: 190px;
+    height: 160px;
+  }
+}
+
+/* Cards played in center trick */
+.trick-slot {
+  position: absolute;
+  transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.trick-slot.south {
+  bottom: 8px;
+  transform: rotate(-2deg);
+}
+
+.trick-slot.north {
+  top: 8px;
+  transform: rotate(3deg);
+}
+
+.trick-slot.west {
+  left: 10px;
+  transform: rotate(-10deg);
+}
+
+.trick-slot.east {
+  right: 10px;
+  transform: rotate(8deg);
+}
+
+/* Center Trick Winner Banner */
+.trick-winner-banner {
+  position: absolute;
+  top: -24px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.98), rgba(184, 134, 11, 0.98));
+  color: #0b1e13;
+  padding: 4px 12px;
+  border-radius: 14px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  animation: bannerFadeIn 0.3s ease;
+  z-index: 30;
+}
+
+@keyframes bannerFadeIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Double Sar Heap Badge in Center */
+.heap-badge {
+  position: absolute;
+  bottom: -22px;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid var(--gold-primary);
+  color: var(--gold-light);
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.5);
+  z-index: 25;
+}
+
+/* Bottom Controls Dock */
+.table-bottom-bar {
+  position: absolute;
+  bottom: 8px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 35;
+}
+
+.table-left-bar {
+  position: absolute;
+  bottom: 8px;
+  left: 12px;
+  display: flex;
+  gap: 8px;
+  z-index: 35;
+}
+
+/* Reactions Tray Popup */
+.reactions-tray {
+  position: absolute;
+  bottom: 52px;
+  right: 12px;
+  background: rgba(15, 23, 42, 0.96);
+  border: 1px solid var(--gold-primary);
+  backdrop-filter: blur(12px);
+  border-radius: 14px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 270px;
+  max-width: 90vw;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+  z-index: 70;
+  transform: scale(0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.reactions-tray.open {
+  transform: scale(1);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.reaction-slogans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+}
+
+.slogan-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.slogan-btn:hover {
+  background: rgba(212, 175, 55, 0.25);
+  border-color: var(--gold-primary);
+}
+
+.custom-chat-row {
+  display: flex;
+  gap: 4px;
+}
+
+.chat-input {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  outline: none;
+}
+
+.chat-input:focus {
+  border-color: var(--gold-primary);
+}
+
+.chat-send-btn {
+  background: var(--gold-primary);
+  border: none;
+  color: #0d2315;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+/* Trump Selection Modal Suits Grid */
+.trump-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.trump-suit-card {
+  background: rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.trump-suit-card:hover {
+  border-color: var(--gold-primary);
+  background: rgba(212, 175, 55, 0.15);
+  transform: translateY(-2px);
+}
+
+.trump-suit-card.spades, .trump-suit-card.clubs {
+  color: #ffffff;
+}
+
+.trump-suit-card.hearts, .trump-suit-card.diamonds {
+  color: #ef4444;
+}
+
+.trump-card-symbol {
+  font-size: 38px;
+  margin-bottom: 4px;
+}
+
+.trump-card-name {
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.trump-card-punjabi {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.trump-recommendation {
+  background: rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  color: #86efac;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+/* Lobby Seats Grid */
+.lobby-seats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+
+.lobby-seat {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.lobby-seat.my-seat {
+  border-color: var(--gold-primary);
+  background: rgba(212, 175, 55, 0.15);
+}
+
+.lobby-seat-team {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.lobby-seat.team-0 .lobby-seat-team { color: #60a5fa; }
+.lobby-seat.team-1 .lobby-seat-team { color: #f87171; }
+
+.seat-action-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.seat-action-btn:hover {
+  background: rgba(212, 175, 55, 0.25);
+  border-color: var(--gold-primary);
+}
+
+/* Score Summary Box for Match Over */
+.score-summary-box {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.bawla-badge {
+  color: #facc15;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+.kote-badge {
+  color: #f87171;
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 640px) {
+  .player-card {
+    min-width: 68px;
+    padding: 3px 5px;
+  }
+  .player-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  .player-name {
+    font-size: 0.68rem;
+    max-width: 60px;
+  }
+  .table-bottom-bar, .table-left-bar {
+    bottom: 4px;
+  }
+  .pill-btn {
+    font-size: 0.75rem;
+    padding: 4px 10px;
+  }
+}

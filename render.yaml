@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: rang-punjabi-card-game
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
