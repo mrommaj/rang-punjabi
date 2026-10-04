@@ -20,11 +20,12 @@
 
   class UIManager {
     constructor() {
-      this.cardSortMode = 'suit'; // 'suit' or 'rank'
-      this.botSpeed = 1000; // ms
+      this.cardSortMode = 'suit';
+      this.botSpeed = 900;
       this.soundEnabled = true;
       this.onCardPlayCallback = null;
       this.onTrumpSelectedCallback = null;
+      this.selectedCardId = null;
     }
 
     init() {
@@ -51,18 +52,17 @@
 
       setTimeout(() => {
         toast.style.opacity = '0';
-        toast.style.transform = 'translateY(-10px)';
-        setTimeout(() => toast.remove(), 300);
+        toast.style.transform = 'translateY(-8px)';
+        setTimeout(() => toast.remove(), 250);
       }, duration);
     }
 
-    showPlayerReaction(playerIndex, text, emoji = '🔥') {
+    showPlayerReaction(playerIndex, text) {
       const zones = ['south', 'east', 'north', 'west'];
       const zoneName = zones[playerIndex];
       const zoneEl = document.querySelector(`.player-zone.${zoneName}`);
       if (!zoneEl) return;
 
-      // Remove existing bubble
       const oldBubble = zoneEl.querySelector('.speech-bubble');
       if (oldBubble) oldBubble.remove();
 
@@ -72,11 +72,11 @@
       zoneEl.appendChild(bubble);
 
       setTimeout(() => {
-        bubble.style.transition = 'opacity 0.3s, transform 0.3s';
+        bubble.style.transition = 'opacity 0.25s, transform 0.25s';
         bubble.style.opacity = '0';
         bubble.style.transform = 'scale(0.8)';
-        setTimeout(() => bubble.remove(), 350);
-      }, 2500);
+        setTimeout(() => bubble.remove(), 280);
+      }, 2400);
     }
 
     renderAvatarsGrid() {
@@ -108,42 +108,43 @@
     renderTableState(state, mySeatIndex = 0) {
       if (!state) return;
 
-      // Update Top Bar
+      // Update Top Bar Score
       const teamYouTricks = state.tricksWon[`team${mySeatIndex % 2}`] || 0;
       const teamOppTricks = state.tricksWon[`team${(mySeatIndex + 1) % 2}`] || 0;
-      
       const teamYouScore = state.matchScore[`team${mySeatIndex % 2}`] || 0;
       const teamOppScore = state.matchScore[`team${(mySeatIndex + 1) % 2}`] || 0;
 
-      document.getElementById('top-score-display').innerHTML = `
-        <span class="team-badge team-you">You: ${teamYouTricks} (${teamYouScore} pts)</span>
-        <span class="score-vs">vs</span>
-        <span class="team-badge team-opp">Opp: ${teamOppTricks} (${teamOppScore} pts)</span>
-      `;
+      const topScore = document.getElementById('top-score-display');
+      if (topScore) {
+        topScore.innerHTML = `
+          <span class="team-badge team-you">You: ${teamYouTricks} (${teamYouScore}p)</span>
+          <span class="score-vs">:</span>
+          <span class="team-badge team-opp">Opp: ${teamOppTricks} (${teamOppScore}p)</span>
+        `;
+      }
 
       // Update Trump Widget
       const trumpWidget = document.getElementById('top-trump-widget');
       if (trumpWidget) {
         if (!state.trumpRevealed) {
-          trumpWidget.innerHTML = `<span>🔒</span> <span>Band Rang</span>`;
+          trumpWidget.innerHTML = `<span>🔒</span> <span>Band</span>`;
         } else if (state.trumpSuit) {
           const meta = {
-            'S': { symbol: '♠', name: 'Hukum (Spades)', color: '#fff' },
-            'H': { symbol: '♥', name: 'Paan (Hearts)', color: '#ef4444' },
-            'D': { symbol: '♦', name: 'Eent (Diamonds)', color: '#ef4444' },
-            'C': { symbol: '♣', name: 'Chidi (Clubs)', color: '#fff' }
+            'S': { symbol: '♠', name: 'Hukum', color: '#fff' },
+            'H': { symbol: '♥', name: 'Paan', color: '#ef4444' },
+            'D': { symbol: '♦', name: 'Eent', color: '#ef4444' },
+            'C': { symbol: '♣', name: 'Chidi', color: '#fff' }
           }[state.trumpSuit];
-          trumpWidget.innerHTML = `<span style="color:${meta.color};font-size:16px;">${meta.symbol}</span> <span>${meta.name}</span>`;
+          trumpWidget.innerHTML = `<span style="color:${meta.color};font-size:14px;">${meta.symbol}</span> <span>${meta.name}</span>`;
         } else {
           trumpWidget.innerHTML = `<span>🃏</span> <span>Calling...</span>`;
         }
       }
 
-      // Update Player Seats (Relative to viewer: 0=South, 1=East, 2=North, 3=West)
+      // Update 4 Player Seats
       const seatPositions = ['south', 'east', 'north', 'west'];
       
       for (let relPos = 0; relPos < 4; relPos++) {
-        // Absolute player index in game
         const absPlayerIndex = (mySeatIndex + relPos) % 4;
         const pData = state.players[absPlayerIndex];
         const posClass = seatPositions[relPos];
@@ -156,7 +157,7 @@
         const avatarInfo = AVATAR_MAP[pData.avatar] || { emoji: '👳', name: pData.name };
 
         let roleBadge = '';
-        if (isCaller) roleBadge = `<span class="player-badge-role">HUKMI (ਰੰਗ)</span>`;
+        if (isCaller) roleBadge = `<span class="player-badge-role">HUKMI</span>`;
         else if (isDealer) roleBadge = `<span class="player-badge-role dealer">DEALER</span>`;
 
         const pCard = zoneEl.querySelector('.player-card');
@@ -168,15 +169,13 @@
               ${roleBadge}
             </div>
             <div class="player-info-meta">
-              <div class="player-name-row">
-                <span class="player-name" title="${pData.name}">${pData.name}</span>
-              </div>
-              <div class="tricks-pill">Tricks: ${state.playerTricksWon[absPlayerIndex]}</div>
+              <span class="player-name">${pData.name}</span>
+              <span class="tricks-pill">${state.playerTricksWon[absPlayerIndex]} sar</span>
             </div>
           `;
         }
 
-        // Render card fan / mini hands
+        // Render hands
         if (posClass === 'south') {
           this.renderPlayerHand(state.myHand, state.validMoves, isTurn);
         } else {
@@ -196,13 +195,31 @@
       if (!cards || cards.length === 0) return;
 
       const total = cards.length;
-      const angleStep = 3.5;
+      const screenWidth = window.innerWidth || document.documentElement.clientWidth || 360;
+      const availWidth = Math.min(screenWidth - 20, 480);
+
+      // Card width based on screen
+      const isSmallMobile = screenWidth <= 380;
+      const cardWidth = isSmallMobile ? 34 : 38;
+
+      // Calculate overlap so cards are guaranteed to fit 100% inside screen width
+      let overlap = 0;
+      if (total > 1) {
+        const rawTotalWidth = total * cardWidth;
+        if (rawTotalWidth > availWidth) {
+          overlap = (rawTotalWidth - availWidth) / (total - 1);
+        } else {
+          overlap = Math.max(0, cardWidth * 0.32);
+        }
+      }
+
+      const angleStep = Math.min(2.5, 24 / total);
       const startAngle = -((total - 1) * angleStep) / 2;
 
       cards.forEach((card, idx) => {
         const isPlayable = isMyTurn && validCardIds.includes(card.id);
         const angle = startAngle + idx * angleStep;
-        const yOffset = Math.abs(idx - (total - 1) / 2) * 2.2;
+        const yOffset = Math.abs(idx - (total - 1) / 2) * 1.2;
 
         const cardHtml = RangCardRenderer.renderCard(card, {
           isPlayable: isPlayable,
@@ -213,6 +230,9 @@
         cardEl.innerHTML = cardHtml.trim();
         const cardNode = cardEl.firstChild;
 
+        if (idx > 0 && overlap > 0) {
+          cardNode.style.marginLeft = `-${overlap}px`;
+        }
         cardNode.style.transform = `rotate(${angle}deg) translateY(${yOffset}px)`;
         cardNode.style.zIndex = idx + 5;
 
@@ -239,8 +259,7 @@
 
       if (count <= 0) return;
 
-      // Render mini card backs up to count
-      const renderCount = Math.min(count, 8);
+      const renderCount = Math.min(count, 4);
       for (let i = 0; i < renderCount; i++) {
         const cardBack = document.createElement('div');
         cardBack.className = 'card card-back small';
@@ -250,7 +269,7 @@
 
       const pill = document.createElement('div');
       pill.className = 'card-count-pill';
-      pill.innerText = `${count} cards`;
+      pill.innerText = `${count}`;
       handEl.appendChild(pill);
     }
 
@@ -258,7 +277,6 @@
       const arena = document.getElementById('trick-arena');
       if (!arena) return;
 
-      // Clear existing played cards
       arena.querySelectorAll('.trick-slot').forEach(el => el.remove());
 
       const seatPositions = ['south', 'east', 'north', 'west'];
@@ -275,7 +293,7 @@
         });
       }
 
-      // Update Heap Badge for Double Sar
+      // Heap Badge for Double Sar
       let heapBadge = document.getElementById('heap-indicator-badge');
       if (mode === 'double_sar' || mode === 'hidden_rung') {
         if (!heapBadge) {
@@ -285,7 +303,7 @@
           arena.appendChild(heapBadge);
         }
         heapBadge.style.display = 'flex';
-        heapBadge.innerHTML = `<span>📚</span> <span>Heap: ${heapTricks} Tricks Pending</span>`;
+        heapBadge.innerHTML = `<span>📚</span> <span>Heap: ${heapTricks}</span>`;
       } else if (heapBadge) {
         heapBadge.style.display = 'none';
       }
@@ -300,10 +318,10 @@
 
       const banner = document.createElement('div');
       banner.className = 'trick-winner-banner';
-      banner.innerHTML = `🎉 <strong>${winnerName}</strong> won trick with ${winningCard.rank}${RangCardRenderer.getSuitSymbol(winningCard.suit)}`;
+      banner.innerHTML = `🎉 <strong>${winnerName}</strong> (${winningCard.rank}${RangCardRenderer.getSuitSymbol(winningCard.suit)})`;
       arena.appendChild(banner);
 
-      setTimeout(() => banner.remove(), 1700);
+      setTimeout(() => banner.remove(), 1600);
     }
 
     showTrumpSelectModal(cards, mode, onSelect) {
@@ -315,17 +333,15 @@
 
       modal.classList.add('active');
 
-      // Hand preview of first 5 cards
       if (handPreview && cards) {
         handPreview.innerHTML = cards.map(c => RangCardRenderer.renderCard(c, { size: 'small' })).join('');
       }
 
-      // Calculate recommendation
       const ai = new RangAI('pro');
       const rec = ai.chooseTrump(cards, mode);
       const suitMeta = RangGameEngine.SUIT_META[rec.suit];
       if (recBox) {
-        recBox.innerHTML = `💡 <strong>Suggestion:</strong> ${suitMeta.punjabi} (${suitMeta.symbol}) has the highest card strength in your hand!`;
+        recBox.innerHTML = `💡 Best: ${suitMeta.punjabi} (${suitMeta.symbol})`;
       }
 
       const suits = [
@@ -361,21 +377,17 @@
       const rematchBtn = document.getElementById('match-rematch-btn');
 
       const isYouWinner = (result.matchWinner === 0);
-      const winnerName = isYouWinner ? 'Team You & Partner' : 'Opponents Team';
+      const winnerName = isYouWinner ? 'Team You' : 'Opponents';
 
       if (titleEl) {
-        titleEl.innerHTML = isYouWinner 
-          ? `🏆 Victory! ${winnerName} Won!` 
-          : `👏 Good Game! ${winnerName} Won!`;
+        titleEl.innerHTML = isYouWinner ? `🏆 ${winnerName} Won!` : `👏 ${winnerName} Won!`;
       }
 
       if (statsEl) {
         statsEl.innerHTML = `
-          <div class="score-summary-box">
-            <p><strong>Final Score:</strong> Team You: ${result.matchScore.team0} pts | Opponents: ${result.matchScore.team1} pts</p>
-            <p><strong>Kotes:</strong> Team You: ${result.kotesCount.team0} | Opponents: ${result.kotesCount.team1}</p>
-            ${result.isBawlaKote ? '<p class="bawla-badge">👑 BAWLA KOTE (13-0 CLEAN SWEEP)!</p>' : ''}
-            ${result.isKote ? '<p class="kote-badge">🔥 KOTE VICTORY (7-0)!</p>' : ''}
+          <div style="background:rgba(0,0,0,0.4); padding:10px; border-radius:8px; font-size:0.85rem;">
+            <p>Score: You ${result.matchScore.team0} - Opp ${result.matchScore.team1}</p>
+            <p>Kotes: You ${result.kotesCount.team0} - Opp ${result.kotesCount.team1}</p>
           </div>
         `;
       }
@@ -399,24 +411,23 @@
       canvas.height = window.innerHeight;
 
       const particles = [];
-      const colors = ['#ffd700', '#ffae19', '#e63946', '#22c55e', '#3b82f6', '#ffffff'];
+      const colors = ['#ffd700', '#ffae19', '#e63946', '#22c55e', '#3b82f6'];
 
-      for (let i = 0; i < 120; i++) {
+      for (let i = 0; i < 80; i++) {
         particles.push({
           x: canvas.width / 2,
           y: canvas.height / 2,
-          vx: (Math.random() - 0.5) * 16,
-          vy: (Math.random() - 0.8) * 18,
-          size: Math.random() * 8 + 4,
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 0.8) * 16,
+          size: Math.random() * 6 + 3,
           color: colors[Math.floor(Math.random() * colors.length)],
           rotation: Math.random() * 360,
-          vRot: (Math.random() - 0.5) * 12,
-          gravity: 0.35,
+          vRot: (Math.random() - 0.5) * 10,
+          gravity: 0.3,
           alpha: 1
         });
       }
 
-      let animId;
       function render() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         let activeCount = 0;
@@ -426,7 +437,7 @@
           p.y += p.vy;
           p.vy += p.gravity;
           p.rotation += p.vRot;
-          p.alpha -= 0.007;
+          p.alpha -= 0.009;
 
           if (p.alpha > 0) {
             activeCount++;
@@ -441,7 +452,7 @@
         });
 
         if (activeCount > 0) {
-          animId = requestAnimationFrame(render);
+          requestAnimationFrame(render);
         } else {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
@@ -451,7 +462,6 @@
     }
 
     bindGlobalEvents() {
-      // Toggle Reactions Tray
       const chatBtn = document.getElementById('action-chat-btn');
       const tray = document.getElementById('reactions-tray-popover');
       if (chatBtn && tray) {
@@ -466,7 +476,6 @@
         });
       }
 
-      // Close modal buttons
       document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', () => {
           btn.closest('.modal-overlay').classList.remove('active');
